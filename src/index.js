@@ -89,17 +89,31 @@ const createStore = (init) => {
     getState: () => state,
     dispatch,
     register: (event, callback) => {
+      let newReaction
       if (callback === undefined) {
-        reactions = reactions.concat(event)
+        newReaction = event
       } else {
-        reactions = reactions.concat(matchRegister(event, callback))
+        newReaction = matchRegister(event, callback)
+      }
+
+      reactions = reactions.concat(newReaction)
+
+      return () => {
+        reactions = reactions.filter(reaction => reaction !== newReaction)
       }
     },
     subscribe: (path, callback) => {
+      let newSubscriber
       if (callback === undefined) {
-        subscribers = subscribers.concat(path)
+        newSubscriber = path
       } else {
-        subscribers = subscribers.concat(matchSubscriber(path, callback))
+        newSubscriber = matchSubscriber(path, callback)
+      }
+
+      subscribers = subscribers.concat(newSubscriber)
+
+      return () => {
+        subscribers = subscribers.filter(subscriber => subscriber !== newSubscriber)
       }
     }
   }
@@ -112,7 +126,7 @@ const store = createStore({
   },
 })
 
-store.subscribe((store) => {
+const unsubscribe = store.subscribe((store) => {
   console.log(store.getState())
 })
 
@@ -123,14 +137,19 @@ store.subscribe('user.name', (store) => {
 store.register((state, action, store) => {
   if(action.type === 'INCREMENT') {
     state.count += 1
-    store.dispatch('DECREMENT')
   }
+})
+
+const unregister = store.register('INCREMENT', (state, action, store) => {
+  store.dispatch('DECREMENT')
 })
 
 store.register('DECREMENT', state => state.count -= 1)
 store.register('SET_NAME', (state, { payload }) => state.user.name = payload)
 
 store.dispatch('INCREMENT')
+unregister()
+unsubscribe()
 store.dispatch('INCREMENT')
 store.dispatch({ type: 'DECREMENT' })
 store.dispatch({ type: 'SET_NAME', payload: 'Delphibette' })
