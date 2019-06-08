@@ -36,9 +36,9 @@ const matchRegister = (matcher, callback) => (state, action, store) => {
   // TODO: function
 }
 
-const matchSubscriber = (path, callback) => (store, oldState) => {
+const matchSubscriber = (path, callback) => (store, oldState, action) => {
   if (getFromPath(oldState, path) !== getFromPath(store.getState(), path)) {
-    callback(store, oldState)
+    callback(store, oldState, action)
   }
 }
 
@@ -73,7 +73,7 @@ const createStore = (init) => {
 
     if (oldState !== state) {
       for (let i = 0; i < subscribers.length; i += 1) {
-        subscribers[i](store, oldState)
+        subscribers[i](store, oldState, action)
       }
     }
 
@@ -128,8 +128,8 @@ const store = createStore({
   },
 })
 
-const unsubscribe = store.subscribe((store) => {
-  console.log(store.getState())
+const unsubscribe = store.subscribe((store, oldState, action) => {
+  console.log(store.getState(), action)
 })
 
 store.subscribe('user.name', (store) => {
