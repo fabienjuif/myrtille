@@ -1,0 +1,131 @@
+/**
+store
+ - ne doit pas muter pour le provider
+ - subscribe a des mutation (avec path)
+  * subscribe('screens.first', (state) => {})
+    - if (state.screens.first !== oldState.screen.first) callback(state)
+ - dispatch(string | object)
+ - register a des evenements
+  * register('type')(reaction)
+  * pouvoir demonter des register
+  * une reaction peut être une promesse
+ - pouvoir ajouter un sous state à la volé
+
+
+useReaction('ADD_TODO', state => {
+  state.data.todos.push('a')
+})
+
+const todos = connect('state.data.todos')
+const addTodo = action('ADD_TODO')
+
+addTodo({ name: 'oui' })
+ */
+
+const produce = require('immer').default
+
+const match = (matcher, callback) => (state, action) => {
+  if (typeof matcher === 'string' && matcher === action.type) callback(state, action)
+  else if (typeof matcher === 'object' && matcher.type === action.type) callback(state, action)
+  // TODO: regexp
+  // TODO: function
+}
+
+const createStore = (init) => {
+  let state = init
+  let subscribers = []
+  let reactions = []
+  let dispatching = false
+  const nextDispatchs = []
+
+  const dispatch = (action) => {
+    if (dispatching) {
+      nextDispatchs.push(action)
+      return
+    }
+
+    dispatching = true
+
+    let innerAction = action
+    if (typeof action === 'string') innerAction = { type: action }
+
+    const oldState = state
+
+    for (let i = 0; i < reactions.length; i += 1) {
+      state = produce(
+        state,
+        (draft) => {
+          reactions[i](draft, innerAction)
+        },
+      )
+    }
+
+    if (oldState !== state) {
+      for (let i = 0; i < subscribers.length; i += 1) {
+        subscribers[i](store)
+      }
+    }
+
+    dispatching = false
+
+    if (nextDispatchs.length) {
+      const nextAction = nextDispatchs.pop()
+      dispatch(nextAction)
+    }
+  }
+
+  return {
+    getState: () => state,
+    dispatch,
+    register: (event, callback) => {
+      if (callback === undefined) {
+        reactions = reactions.concat(event)
+      } else {
+        reactions = reactions.concat(match(event, callback, store))
+      }
+    },
+    subscribe: (path, callback) => {
+      if (typeof path === 'function') {
+        subscribers = subscribers.concat(path)
+        // TODO:
+        return
+      }
+      if (Array.isArray(path)) {
+        // TODO:
+        return
+      }
+
+      // TODO:
+    }
+  }
+}
+
+const store = createStore({
+  count: 0,
+  user: {
+    name: 'Delphine!',
+  },
+})
+
+store.subscribe((store) => {
+  console.log(store.getState())
+})
+
+store.subscribe('state.user.name', (store) => {
+  console.log('user name changed!', store.getState())
+})
+
+store.register((state, action) => {
+  if(action.type === 'INCREMENT') {
+    state.count += 1
+    store.dispatch('DECREMENT')
+  }
+})
+
+store.register('DECREMENT', state => state.count -= 1)
+store.register('SET_NAME', (state, { payload }) => state.user.name = payload)
+
+store.dispatch('INCREMENT')
+store.dispatch('INCREMENT')
+store.dispatch({ type: 'DECREMENT' })
+store.dispatch({ type: 'SET_NAME', payload: 'Delphibette' })
