@@ -24,11 +24,22 @@ addTodo({ name: 'oui' })
 
 const produce = require('immer').default
 
-const match = (matcher, callback) => (state, action) => {
-  if (typeof matcher === 'string' && matcher === action.type) callback(state, action)
-  else if (typeof matcher === 'object' && matcher.type === action.type) callback(state, action)
+const getFromPath = (data, path) => path.split('.').reduce(
+  (curr, sub) => curr && curr[sub],
+  data,
+)
+
+const matchRegister = (matcher, callback) => (state, action, store) => {
+  if (typeof matcher === 'string' && matcher === action.type) callback(state, action, store)
+  else if (typeof matcher === 'object' && matcher.type === action.type) callback(state, action, store)
   // TODO: regexp
   // TODO: function
+}
+
+const matchSubscriber = (path, callback) => (store, oldState) => {
+  if (getFromPath(oldState, path) !== getFromPath(store.getState(), path)) {
+    callback(store, oldState)
+  }
 }
 
 const createStore = (init) => {
@@ -55,14 +66,14 @@ const createStore = (init) => {
       state = produce(
         state,
         (draft) => {
-          reactions[i](draft, innerAction)
+          reactions[i](draft, innerAction, store)
         },
       )
     }
 
     if (oldState !== state) {
       for (let i = 0; i < subscribers.length; i += 1) {
-        subscribers[i](store)
+        subscribers[i](store, oldState)
       }
     }
 
@@ -81,21 +92,15 @@ const createStore = (init) => {
       if (callback === undefined) {
         reactions = reactions.concat(event)
       } else {
-        reactions = reactions.concat(match(event, callback, store))
+        reactions = reactions.concat(matchRegister(event, callback))
       }
     },
     subscribe: (path, callback) => {
-      if (typeof path === 'function') {
+      if (callback === undefined) {
         subscribers = subscribers.concat(path)
-        // TODO:
-        return
+      } else {
+        subscribers = subscribers.concat(matchSubscriber(path, callback))
       }
-      if (Array.isArray(path)) {
-        // TODO:
-        return
-      }
-
-      // TODO:
     }
   }
 }
@@ -111,11 +116,11 @@ store.subscribe((store) => {
   console.log(store.getState())
 })
 
-store.subscribe('state.user.name', (store) => {
+store.subscribe('user.name', (store) => {
   console.log('user name changed!', store.getState())
 })
 
-store.register((state, action) => {
+store.register((state, action, store) => {
   if(action.type === 'INCREMENT') {
     state.count += 1
     store.dispatch('DECREMENT')
