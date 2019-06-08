@@ -119,6 +119,8 @@ const createStore = (init) => {
   }
 }
 
+const wait = timeout => new Promise(resolve => setTimeout(resolve, timeout))
+
 const store = createStore({
   count: 0,
   user: {
@@ -144,12 +146,18 @@ const unregister = store.register('INCREMENT', (state, action, store) => {
   store.dispatch('DECREMENT')
 })
 
+store.register('START_DECREMENT', async (state, action, store) => {
+  await wait(1000)
+  store.dispatch('DECREMENT')
+})
+
 store.register('DECREMENT', state => state.count -= 1)
+
 store.register('SET_NAME', (state, { payload }) => state.user.name = payload)
 
 store.dispatch('INCREMENT')
 unregister()
-unsubscribe()
+// unsubscribe()
 store.dispatch('INCREMENT')
-store.dispatch({ type: 'DECREMENT' })
+store.dispatch({ type: 'START_DECREMENT' })
 store.dispatch({ type: 'SET_NAME', payload: 'Delphibette' })
