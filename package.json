@@ -1,14 +1,26 @@
 {
   "name": "@fabienjuif/myrtille",
-  "version": "0.2.2",
+  "version": "0.3.1",
   "main": "index.js",
   "module": "index.js",
   "license": "MIT",
+  "repository": "git@github.com:fabienjuif/myrtille.git",
   "dependencies": {
     "immer": "^3.1.3"
   },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
-  }
+  },
+  "keywords": [
+    "state",
+    "store",
+    "state-management",
+    "immutable",
+    "oneway",
+    "reaction",
+    "dispatch",
+    "event",
+    "not-redux"
+  ]
 }

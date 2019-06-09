@@ -1,5 +1,6 @@
 const produce = require('immer').default
 const { getFromPath } = require('./util')
+const connectToDevtools = require('./devtools')
 
 const matchRegister = (matcher, callback) => (state, action, store) => {
   if (typeof matcher === 'string' && matcher === action.type) callback(state, action, store)
@@ -22,14 +23,16 @@ const createStore = (init) => {
   let dispatching = false
   const nextDispatchs = []
 
-  const tryNotify = store => {
+  const runAndNotify = (implementation, action = { type: '@@DIRECT_MUTATION' }) => {
     const oldState = store.getState()
 
-    return (action = { type: '@@DIRECT_MUTATION' }) => {
-      if (oldState !== store.getState()) {
-        for (let i = 0; i < subscribers.length; i += 1) {
-          subscribers[i](store, oldState, action)
-        }
+    implementation()
+
+    if (dispatching) return
+
+    if (oldState !== store.getState()) {
+      for (let i = 0; i < subscribers.length; i += 1) {
+        subscribers[i](store, oldState, action)
       }
     }
   }
@@ -40,18 +43,18 @@ const createStore = (init) => {
       return
     }
 
-    dispatching = true
-
     let innerAction = action
     if (typeof action === 'string') innerAction = { type: action }
 
-    const notify = tryNotify(store)
-    for (let i = 0; i < reactions.length; i += 1) {
-      reactions[i](store, innerAction)
-    }
-    notify()
+    runAndNotify(() => {
+      dispatching = true
 
-    dispatching = false
+      for (let i = 0; i < reactions.length; i += 1) {
+        reactions[i](store, innerAction)
+      }
+
+      dispatching = false
+    }, action)
 
     if (nextDispatchs.length) {
       const nextAction = nextDispatchs.pop()
@@ -68,15 +71,20 @@ const createStore = (init) => {
   }
 
   const mutate = (callback) => {
-    const notify = tryNotify(store)
+    runAndNotify(() => {
+      state = produce(state, draft => { callback(draft) })
+    })
+  }
 
-    state = produce(state, draft => { callback(draft) })
-
-    notify()
+  const setState = (newState) => {
+    runAndNotify(() => {
+      state = newState
+    })
   }
 
   store = {
     contexts: {},
+    setState,
     getState: () => state,
     mutate,
     dispatch,
@@ -106,6 +114,7 @@ const createStore = (init) => {
     }
   }
 
+  connectToDevtools(store)
   return store
 }
 
