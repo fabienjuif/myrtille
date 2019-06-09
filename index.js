@@ -1,27 +1,3 @@
-/**
-store
- - ne doit pas muter pour le provider
- - subscribe a des mutation (avec path)
-  * subscribe('screens.first', (state) => {})
-    - if (state.screens.first !== oldState.screen.first) callback(state)
- - dispatch(string | object)
- - register a des evenements
-  * register('type')(reaction)
-  * pouvoir demonter des register
-  * une reaction peut être une promesse
- - pouvoir ajouter un sous state à la volé
-
-
-useReaction('ADD_TODO', state => {
-  state.data.todos.push('a')
-})
-
-const todos = connect('state.data.todos')
-const addTodo = action('ADD_TODO')
-
-addTodo({ name: 'oui' })
- */
-
 const produce = require('immer').default
 const { getFromPath } = require('./util')
 
@@ -46,6 +22,18 @@ const createStore = (init) => {
   let dispatching = false
   const nextDispatchs = []
 
+  const tryNotify = store => {
+    const oldState = store.getState()
+
+    return (action = { type: '@@DIRECT_MUTATION' }) => {
+      if (oldState !== store.getState()) {
+        for (let i = 0; i < subscribers.length; i += 1) {
+          subscribers[i](store, oldState, action)
+        }
+      }
+    }
+  }
+
   const dispatch = (action) => {
     if (dispatching) {
       nextDispatchs.push(action)
@@ -57,22 +45,11 @@ const createStore = (init) => {
     let innerAction = action
     if (typeof action === 'string') innerAction = { type: action }
 
-    const oldState = state
-
+    const notify = tryNotify(store)
     for (let i = 0; i < reactions.length; i += 1) {
-      state = produce(
-        state,
-        (draft) => {
-          reactions[i](draft, innerAction, store)
-        },
-      )
+      reactions[i](store, innerAction)
     }
-
-    if (oldState !== state) {
-      for (let i = 0; i < subscribers.length; i += 1) {
-        subscribers[i](store, oldState, action)
-      }
-    }
+    notify()
 
     dispatching = false
 
@@ -82,11 +59,28 @@ const createStore = (init) => {
     }
   }
 
+  const removeListener = (callback) => {
+    reactions = reactions.filter(reaction => reaction !== callback)
+  }
+
+  const removeSubscriber = (callback) =>  {
+    subscribers = subscribers.filter(subscriber => subscriber !== callback)
+  }
+
+  const mutate = (callback) => {
+    const notify = tryNotify(store)
+
+    state = produce(state, draft => { callback(draft) })
+
+    notify()
+  }
+
   store = {
     contexts: {},
     getState: () => state,
+    mutate,
     dispatch,
-    register: (event, callback) => {
+    addListener: (event, callback) => {
       let newReaction
       if (callback === undefined) {
         newReaction = event
@@ -96,9 +90,7 @@ const createStore = (init) => {
 
       reactions = reactions.concat(newReaction)
 
-      return () => {
-        reactions = reactions.filter(reaction => reaction !== newReaction)
-      }
+      return () => removeListener(newReaction)
     },
     subscribe: (path, callback) => {
       let newSubscriber
@@ -110,56 +102,11 @@ const createStore = (init) => {
 
       subscribers = subscribers.concat(newSubscriber)
 
-      return () => {
-        subscribers = subscribers.filter(subscriber => subscriber !== newSubscriber)
-      }
+      return () => removeSubscriber(newSubscriber)
     }
   }
 
   return store
 }
-
-// const wait = timeout => new Promise(resolve => setTimeout(resolve, timeout))
-
-// const store = createStore({
-//   count: 0,
-//   user: {
-//     name: 'Delphine!',
-//   },
-// })
-
-// const unsubscribe = store.subscribe((store, oldState, action) => {
-//   console.log(store.getState(), action)
-// })
-
-// store.subscribe('user.name', (store) => {
-//   console.log('user name changed!', store.getState())
-// })
-
-// store.register((state, action, store) => {
-//   if(action.type === 'INCREMENT') {
-//     state.count += 1
-//   }
-// })
-
-// const unregister = store.register('INCREMENT', (state, action, store) => {
-//   store.dispatch('DECREMENT')
-// })
-
-// store.register('START_DECREMENT', async (state, action, store) => {
-//   await wait(1000)
-//   store.dispatch('DECREMENT')
-// })
-
-// store.register('DECREMENT', state => state.count -= 1)
-
-// store.register('SET_NAME', (state, { payload }) => state.user.name = payload)
-
-// store.dispatch('INCREMENT')
-// unregister()
-// // unsubscribe()
-// store.dispatch('INCREMENT')
-// store.dispatch({ type: 'START_DECREMENT' })
-// store.dispatch({ type: 'SET_NAME', payload: 'Delphibette' })
 
 module.exports = createStore

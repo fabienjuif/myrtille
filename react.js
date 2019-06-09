@@ -44,7 +44,7 @@ export const useListeners = (listeners = []) => {
 
   useEffect(() => {
     const unregisters = listeners.map(([matcher, mutator]) => {
-      return store.register(matcher, mutator)
+      return store.addListener(matcher, mutator)
     })
 
     return () => {
