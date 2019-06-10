@@ -4,7 +4,7 @@
 ![npm](https://img.shields.io/npm/v/@fabienjuif/myrtille.svg) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@fabienjuif/myrtille.svg)
 
 # Features
-- 🔄 One-way state manager: your store is the source of truth
+- 🔄 One-way state manager: your store is the single source of truth
 - 💎 Immutable but feels mutable
 - ⛏️ Hackable
 - 💡 Based on events (actions)
@@ -15,7 +15,7 @@
  - https://github.com/jamiebuilds/bey
 
 # The goal
-The goal is to have a simple state manager, but keeping our of any UI library.
+The goal is to have a simple state manager, without behind strictely related to single UI library (like react or vue).
 The Redux pattern, having a one-way state management is a good pattern but Redux suffer from boilerplate, and once you add middleware you don't have clear separation of concerns.
 Myrtille tries to fix this drawbacks by using [immer](https://github.com/immerjs/immer) under the hood and by merging "reducers" and "reactions" in one place: listeners.
 
