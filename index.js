@@ -2,16 +2,16 @@ const produce = require('immer').default
 const { getFromPath } = require('./util')
 const connectToDevtools = require('./devtools')
 
-const matchRegister = (matcher, callback) => (state, action, store) => {
-  if (typeof matcher === 'string' && matcher === action.type) callback(state, action, store)
-  else if (typeof matcher === 'object' && matcher.type === action.type) callback(state, action, store)
+const matchListener = (matcher, callback) => (store, action, ...args) => {
+  if (typeof matcher === 'string' && matcher === action.type) callback(store, action, ...args)
+  else if (typeof matcher === 'object' && matcher.type === action.type) callback(store, action, ...args)
   // TODO: regexp
   // TODO: function
 }
 
-const matchSubscriber = (path, callback) => (store, oldState, action) => {
+const matchSubscriber = (path, callback) => (store, oldState, ...args) => {
   if (getFromPath(oldState, path) !== getFromPath(store.getState(), path)) {
-    callback(store, oldState, action)
+    callback(store, oldState, ...args)
   }
 }
 
@@ -93,7 +93,7 @@ const createStore = (init) => {
       if (callback === undefined) {
         newReaction = event
       } else {
-        newReaction = matchRegister(event, callback)
+        newReaction = matchListener(event, callback)
       }
 
       reactions = reactions.concat(newReaction)
