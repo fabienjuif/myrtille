@@ -2,16 +2,15 @@
 module.exports = (store) => {
   if (!window) return
   const extension = window.__REDUX_DEVTOOLS_EXTENSION__ || window.top.__REDUX_DEVTOOLS_EXTENSION__
-  let ignoreState = false
 
 	if (!extension) {
-		console.warn('Please install/enable Redux devtools extension')
 		store.devtools = null
-
 		return store
 	}
 
 	if (!store.devtools) {
+		let ignoreState = false
+
 		store.devtools = extension.connect()
 		store.devtools.subscribe((message) => {
 			if (message.type === 'DISPATCH' && message.state) {
