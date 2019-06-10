@@ -17,7 +17,7 @@
 # The goal
 The goal is to have a simple state manager, without being strictely related to single view library (like React or Vue).
 The Redux pattern, having a one-way state management, is a good pattern but Redux suffers from boilerplate, and once you add middleware you don't have clear separation of concerns.
-Myrtille tries to fix this drawback by using [immer](https://github.com/immerjs/immer) under the hood and by merging "reducers" and "reactions" into one place: listeners.
+Myrtille tries to fix these drawbacks by using [immer](https://github.com/immerjs/immer) under the hood and by merging "reducers" and "reactions" into one place: listeners.
 
 We also want to make sure your UI component tree is optimized and only refreshes when needed, that's why you can give a `path` to subscribers, you can make sure your component tree will be refreshed only when this path updates.
 
