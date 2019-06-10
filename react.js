@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useRef, useEffect, useState } from 'react'
+import React, {
+  createContext,
+  useContext,
+  useRef,
+  useEffect,
+  useState,
+} from 'react' // eslint-disable-line import/no-unresolved
 import createStore from './index'
 import { getFromPath } from './util'
 
@@ -6,7 +12,7 @@ export { createStore }
 
 export const Context = createContext()
 
-export const provider = store => Component => props => {
+export const provider = store => Component => (props) => {
   useEffect(() => {
     store.dispatch('@@react/MOUNT')
     return () => {
@@ -27,7 +33,7 @@ export const useActions = (actions = []) => {
 
   if (mappedActions.current) return mappedActions.current
 
-  mappedActions.current = actions.map(action => {
+  mappedActions.current = actions.map((action) => {
     if (typeof action === 'string') return () => store.dispatch(action)
     if (typeof action === 'function') return (...args) => store.dispatch(action(...args))
 
@@ -43,9 +49,7 @@ export const useListeners = (listeners = []) => {
   const store = useContext(Context)
 
   useEffect(() => {
-    const unregisters = listeners.map(([matcher, mutator]) => {
-      return store.addListener(matcher, mutator)
-    })
+    const unregisters = listeners.map(([matcher, mutator]) => store.addListener(matcher, mutator))
 
     return () => {
       unregisters.forEach(unregister => unregister())
@@ -57,9 +61,10 @@ export const useStoreState = (path) => {
   const store = useContext(Context)
   const [state, setState] = useState(getFromPath(store.getState(), path))
 
-  useEffect(() => {
-    return store.subscribe(path, () => setState(getFromPath(store.getState(), path)))
-  }, [])
+  useEffect(
+    () => store.subscribe(path, () => setState(getFromPath(store.getState(), path))),
+    [],
+  )
 
   return state
 }

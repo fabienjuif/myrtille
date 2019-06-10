@@ -66,13 +66,13 @@ const createStore = (init) => {
     reactions = reactions.filter(reaction => reaction !== callback)
   }
 
-  const removeSubscriber = (callback) =>  {
+  const removeSubscriber = (callback) => {
     subscribers = subscribers.filter(subscriber => subscriber !== callback)
   }
 
   const mutate = (callback) => {
     runAndNotify(() => {
-      state = produce(state, draft => { callback(draft) })
+      state = produce(state, (draft) => { callback(draft) })
     })
   }
 
@@ -111,7 +111,7 @@ const createStore = (init) => {
       subscribers = subscribers.concat(newSubscriber)
 
       return () => removeSubscriber(newSubscriber)
-    }
+    },
   }
 
   connectToDevtools(store)

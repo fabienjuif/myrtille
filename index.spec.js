@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow,no-param-reassign */
 /* eslint-env jest */
 const createStore = require('./index')
 
@@ -14,7 +15,7 @@ it('should set state', () => {
 
 it('should mutate state', () => {
   const store = createStore({ before: true })
-  store.mutate(state => { state.before = false })
+  store.mutate((state) => { state.before = false })
   expect(store.getState()).toEqual({ before: false })
 })
 
@@ -38,11 +39,11 @@ it('should subscribe to all mutations', () => {
   const store = createStore({ name: undefined, todos: [] })
   store.subscribe(callback)
 
-  store.mutate(state => { state.name = 'Delphine' })
+  store.mutate((state) => { state.name = 'Delphine' })
   store.setState({ name: 'Fabien', todos: [{ id: 1, label: 'Finish tests' }] })
 
   expect(callback).toHaveBeenCalledTimes(2)
-  expect(callback.mock.calls[0]).toEqual([store, { name: undefined, todos:[] }, { type: '@@DIRECT_MUTATION' }])
+  expect(callback.mock.calls[0]).toEqual([store, { name: undefined, todos: [] }, { type: '@@DIRECT_MUTATION' }])
   expect(callback.mock.calls[1]).toEqual([store, { name: 'Delphine', todos: [] }, { type: '@@DIRECT_MUTATION' }])
 })
 
@@ -53,7 +54,7 @@ it('should subscribe to given state path only', () => {
   store.subscribe('name', callback)
 
   // mutate
-  store.mutate(state => { state.name = 'Delphine' })
+  store.mutate((state) => { state.name = 'Delphine' })
   expect(callback).toHaveBeenCalledTimes(1)
   store.mutate(state => state.todos.push({ id: 2, label: 'new' }))
   expect(callback).toHaveBeenCalledTimes(1)
@@ -82,7 +83,7 @@ it('should listen to specified actions only', () => {
 it('should be possible to mutate store into a listener', () => {
   const store = createStore({ todos: [] })
   store.addListener('ADD_TODO', (store, action) => {
-    store.mutate(state => {
+    store.mutate((state) => {
       state.todos.push(action.payload)
     })
   })
@@ -108,12 +109,12 @@ it('should be possible to dispatch an action into a listener', () => {
 it('should be possible to mutate store into a subscriber', () => {
   const store = createStore({ name: undefined, todos: [] })
   store.subscribe('todos', (store, oldState, action) => {
-    store.mutate(state => {
+    store.mutate((state) => {
       state.name = action.payload.user
     })
   })
   store.addListener('ADD_TODO', (store, action) => {
-    store.mutate(state => {
+    store.mutate((state) => {
       state.todos.push(action.payload)
     })
   })
@@ -130,7 +131,7 @@ it('should be possible to dispatch an action into a subscriber', () => {
   })
   store.addListener('ADD_TODO', callback)
 
-  store.mutate(state => { state.name = 'Delphine' })
+  store.mutate((state) => { state.name = 'Delphine' })
 
   expect(callback).toHaveBeenCalledTimes(1)
   expect(callback.mock.calls[0]).toEqual([store, { type: 'ADD_TODO', payload: { id: 1, label: 'Introduce yourself to #welcome' } }])
