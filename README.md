@@ -15,13 +15,13 @@
  - https://github.com/jamiebuilds/bey
 
 # The goal
-The goal is to have a simple state manager, without behind strictely related to single UI library (like react or vue).
-The Redux pattern, having a one-way state management is a good pattern but Redux suffer from boilerplate, and once you add middleware you don't have clear separation of concerns.
-Myrtille tries to fix this drawbacks by using [immer](https://github.com/immerjs/immer) under the hood and by merging "reducers" and "reactions" in one place: listeners.
+The goal is to have a simple state manager, without being strictely related to single view library (like React or Vue).
+The Redux pattern, having a one-way state management, is a good pattern but Redux suffers from boilerplate, and once you add middleware you don't have clear separation of concerns.
+Myrtille tries to fix this drawback by using [immer](https://github.com/immerjs/immer) under the hood and by merging "reducers" and "reactions" into one place: listeners.
 
 We also want to make sure your UI component tree is optimized and only refreshes when needed, that's why you can give a `path` to subscribers, you can make sure your component tree will be refreshed only when this path updates.
 
-One of the last goal that Myrtille aims at is to let the developper doing whatever he wants with this library, that's why the store is always given and usable inside your callbacks, hack-it!
+One of the last goals that Myrtille aims at is to let the developper doing whatever he wants with this library, that's why the store is always given and usable inside your callbacks, hack-it!
 
 # Installation
 - `npm install --save @fabienjuif/myrtille`
@@ -35,32 +35,32 @@ One of the last goal that Myrtille aims at is to let the developper doing whatev
 - `Store.setState(newState: Object) -> void`
   * set state to the given one and triggers listeners
 - `Store.getState() -> State`
-  * get the current state.
+  * get the current state
 - `Store.mutate((state: State) -> void): void`
-  * register a mutation, the `currentState` given in callback HAVE TO be muted, this is [myrtille](https://github.com/fabienjuif/myrtille) (via [immer](https://github.com/immerjs/immer)) that make sure this is done in an immutable way!
+  * register a mutation, the `currentState` given in callback HAVE TO be mutated, it is [myrtille](https://github.com/fabienjuif/myrtille) (via [immer](https://github.com/immerjs/immer)) that makes sure this is done in an immutable way!
   * eg: `store.mutate(state => { state.todos.push({ id: 2, label: 'new' }) })`
 - `Store.dispatch(action: String | Object) -> void`
-  * dispatch an action that listeners can register on, if the action is a string, the `action` is created by [myrtille](https://github.com/fabienjuif/myrtille) to follow the standard rule: `{ type: $yourString }`
+  * dispatch an action that listeners can register on. If the action is a string, the `action` is created by [myrtille](https://github.com/fabienjuif/myrtille) to follow the standard rule: `{ type: $yourString }`
   * eg: `store.dispatch('FETCH_TODOS')`
   * eg: `store.dispatch({ type: 'ADD_TODO', payload: { id: 2, label: 'new' }})`
 - `Store.addListener(action: String | Action | Function, callback: Function((store: Store, action: Action) -> void) | void) -> Function`
   * add a listener to the store, a listener **listen** to an action, when this `action` is dispatched, the registered `callback` is called.
   * you can set your `callback` at first argument, in which it will be called for every actions dispatched.
-  * you can play with the store in the given callback (dispatch new action, register mutations, etc)
+  * you can play with the store in the given callback (dispatch new action, register mutations, etc.)
   * calling the returned function will remove your callback
   * eg: [take a look at listeners examples](#listeners-examples)
 - `Store.subscribe(path: String | Function, callback: Function(store: Store, oldState: State, action: Action) | void) -> Function`
-  * subcribe to state mutations at given `path`. The registered `callback` is called whenever the store as muted at given `path`.
+  * subcribe to state mutations at given `path`. The registered `callback` is called whenever the store was mutated at given `path`.
   * you can set your `callback` at first argument, in which it will be called for every mutations
-  * you can play with the store in the given callback (dispatch new action, register mutations, etc) but prefer using listeners and dispatching actions.
-  * caling the returned function will unsubscribe your callback
+  * you can play with the store in the given callback (dispatch new action, register mutations, etc.) but prefer using listeners and dispatching actions.
+  * calling the returned function will unsubscribe your callback
 - `Store.contexts: Object`
-  * used to retrieves some informations from your callbacks given in `addListener` and `subscribe`
+  * used to retrieve some informations from your callbacks given to `addListener` and `subscribe`
   * eg: `store.contexts.firebase = require('firebase/app')`
 
 # Listeners examples
 **Async and mutation**
-- Listen to an action that look like `{ type: 'FETCH_TODOS' }`
+- Listen to an action that looks like `{ type: 'FETCH_TODOS' }`
 - Fetch todos
 - Set todos in store
 ```js
@@ -80,7 +80,7 @@ store.dispatch('FETCH_TODOS')
 ```
 
 **retrieve action informations**
-- Listen to `ADD_TODO` action that can be dispatched by a click from the UI)
+- Listen to `ADD_TODO` action (that can be dispatched by a click from the UI)
 - Add a new todo with information given in the action's payload
 ```js
 const store = createStore({ todos: [] })
