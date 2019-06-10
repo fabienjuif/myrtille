@@ -1,7 +1,7 @@
 # @fabienjuif/myrtille
 > An immutable (but feeling mutable) one-way state manager without reducers
 
-![npm](https://img.shields.io/npm/v/@fabienjuif/myrtille.svg) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@fabienjuif/myrtille.svg)
+![npm](https://img.shields.io/npm/v/@fabienjuif/myrtille.svg) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@fabienjuif/myrtille.svg) ![CircleCI](https://img.shields.io/circleci/build/github/fabienjuif/myrtille.svg)
 
 # Features
 - 🔄 One-way state manager: your store is the single source of truth
