@@ -23,6 +23,11 @@ We also want to make sure your UI component tree is optimized and only refreshes
 
 One of the last goal that Myrtille aims at is to let the developper doing whatever he wants with this library, that's why the store is always given and usable inside your callbacks, hack-it!
 
+# Installation
+- `npm install --save @fabienjuif/myrtille`
+- `yarn add @fabienjuif/myrtille`
+- `pnpm install --save @fabienjuif/myrtille`  
+
 # API
 - `createStore(initialState: Object) -> Store`
   * create a store with the given initial state
