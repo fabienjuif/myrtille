@@ -10,8 +10,12 @@ const matchListener = (matcher, callback) => (store, action, ...args) => {
 }
 
 const matchSubscriber = (path, callback) => (store, oldState, ...args) => {
-  if (getFromPath(oldState, path) !== getFromPath(store.getState(), path)) {
-    callback(store, oldState, ...args)
+  const call = () => callback(store, oldState, ...args)
+
+  if (path === undefined || path.trim() === '') {
+    if (oldState !== store.getState()) call()
+  } else if (getFromPath(oldState, path) !== getFromPath(store.getState(), path)) {
+    call()
   }
 }
 
@@ -30,21 +34,19 @@ const createStore = (init) => {
 
     if (dispatching) return
 
-    if (oldState !== store.getState()) {
-      for (let i = 0; i < subscribers.length; i += 1) {
-        subscribers[i](store, oldState, action)
-      }
+    for (let i = 0; i < subscribers.length; i += 1) {
+      subscribers[i](store, oldState, action)
     }
   }
 
   const dispatch = (action) => {
-    if (dispatching) {
-      nextDispatchs.push(action)
-      return
-    }
-
     let innerAction = action
     if (typeof action === 'string') innerAction = { type: action }
+
+    if (dispatching) {
+      nextDispatchs.push(innerAction)
+      return
+    }
 
     runAndNotify(() => {
       dispatching = true
@@ -54,7 +56,7 @@ const createStore = (init) => {
       }
 
       dispatching = false
-    }, action)
+    }, innerAction)
 
     if (nextDispatchs.length) {
       const nextAction = nextDispatchs.pop()

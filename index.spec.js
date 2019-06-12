@@ -136,3 +136,23 @@ it('should be possible to dispatch an action into a subscriber', () => {
   expect(callback).toHaveBeenCalledTimes(1)
   expect(callback.mock.calls[0]).toEqual([store, { type: 'ADD_TODO', payload: { id: 1, label: 'Introduce yourself to #welcome' } }])
 })
+
+it('should trigger subscribers when a dispatch does not mutate store', () => {
+  const callback = jest.fn()
+  const store = createStore({})
+  store.subscribe(callback)
+
+  store.dispatch('NO_MODIFICATION')
+
+  expect(callback).toHaveBeenCalledTimes(1)
+})
+
+it('should NOT trigger subscribers when a dispatch does not mutate store', () => {
+  const callback = jest.fn()
+  const store = createStore({})
+  store.subscribe('', callback)
+
+  store.dispatch('NO_MODIFICATION')
+
+  expect(callback).toHaveBeenCalledTimes(0)
+})

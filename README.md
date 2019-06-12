@@ -26,7 +26,7 @@ One of the last goals that Myrtille aims at is to let the developper doing whate
 # Installation
 - `npm install --save @fabienjuif/myrtille`
 - `yarn add @fabienjuif/myrtille`
-- `pnpm install --save @fabienjuif/myrtille`  
+- `pnpm install --save @fabienjuif/myrtille`
 
 # API
 - `createStore(initialState: Object) -> Store`
@@ -51,7 +51,8 @@ One of the last goals that Myrtille aims at is to let the developper doing whate
   * eg: [take a look at listeners examples](#listeners-examples)
 - `Store.subscribe(path: String | Function, callback: Function(store: Store, oldState: State, action: Action) | void) -> Function`
   * subcribe to state mutations at given `path`. The registered `callback` is called whenever the store was mutated at given `path`.
-  * you can set your `callback` at first argument, in which it will be called for every mutations
+  * you can set your `callback` at first argument, in which it will be called for every dispatch (even if there is no mutation)
+  * if you set path to `''` (empty string),  the callback will be called only for root mutations
   * you can play with the store in the given callback (dispatch new action, register mutations, etc.) but prefer using listeners and dispatching actions.
   * calling the returned function will unsubscribe your callback
 - `Store.contexts: Object`
