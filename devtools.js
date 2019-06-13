@@ -30,7 +30,6 @@ module.exports = (store) => {
       }
 
       const actionName = (action && action.type) || '🤔 UNKNOWN'
-      console.log(action)
       store.devtools.send(actionName, store.getState())
     })
   }
