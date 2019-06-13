@@ -1,7 +1,7 @@
 {
   "name": "@fabienjuif/myrtille",
   "description": "An immutable (but feeling mutable) one-way state manager without reducers",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "main": "index.js",
   "module": "index.js",
   "license": "MIT",
