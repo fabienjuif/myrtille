@@ -1,7 +1,6 @@
 import React, {
   createContext,
   useContext,
-  useRef,
   useEffect,
   useState,
 } from 'react' // eslint-disable-line import/no-unresolved
@@ -27,22 +26,12 @@ export const provider = store => Component => (props) => {
   )
 }
 
-export const useActions = (actions = []) => {
-  const mappedActions = useRef()
+export const useStore = () => useContext(Context)
+
+export const useDispatch = () => {
   const store = useContext(Context)
 
-  if (mappedActions.current) return mappedActions.current
-
-  mappedActions.current = actions.map((action) => {
-    if (typeof action === 'string') return () => store.dispatch(action)
-    if (typeof action === 'function') return (...args) => store.dispatch(action(...args))
-
-    const error = new Error('Unknown action type')
-    error.action = action
-    throw error
-  })
-
-  return mappedActions.current
+  return store.dispatch
 }
 
 export const useListeners = (listeners = []) => {
@@ -57,7 +46,7 @@ export const useListeners = (listeners = []) => {
   }, [store])
 }
 
-export const useStoreState = (path) => {
+export const useStateAt = (path) => {
   const store = useContext(Context)
   const [state, setState] = useState(getFromPath(store.getState(), path))
 

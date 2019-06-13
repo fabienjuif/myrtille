@@ -121,9 +121,11 @@ store.dispatch('@@ui/CLEAR_TODOS')
 ## React <img width=30 src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/640px-React-icon.svg.png" />
 
 ### API
-- `createStore(initialState: Object) -> Store`: Please look at [API](#api).
-- `Context: React.Context`:
+- `createStore(initialState: Object) -> Store`
+  * Please look at [API](#api).
 - `provider(store: Store) -> Function(React.Component) -> React.Component`
-- `useActions(actions: [](String | Function)) -> Function[]`
+- `useDispatch() -> Function`
 - `useListeners(listeners: [][(String | Action), Function]) -> void`
-- `useStoreState(path: String | void) -> Any`
+- `useStateAt(path: String | void) -> Any`
+- `useStore -> Store`
+- `Context: React.Context`
