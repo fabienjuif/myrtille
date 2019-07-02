@@ -119,6 +119,7 @@ store.dispatch('@@ui/CLEAR_TODOS')
 
 # Bindings
 ## React <img width=30 src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/640px-React-icon.svg.png" />
+`import {} from "@fabienjuif/myrtille/react"`
 
 ### API
 - `createStore(initialState: Object) -> Store`
