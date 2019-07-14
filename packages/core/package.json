@@ -1,7 +1,7 @@
 {
   "name": "@myrtille/core",
   "description": "A one-way state manager without reducers.",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "main": "index.js",
   "license": "MIT",
   "publishConfig": {
@@ -9,7 +9,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@myrtille/util": "^0.6.0"
+    "@myrtille/util": "^0.7.0"
   },
   "keywords": [
     "state",
