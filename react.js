@@ -26,6 +26,12 @@ export const provider = store => Component => (props) => {
   )
 }
 
+export const Provider = ({ store, children }) => React.createElement(
+  Context.Provider,
+  { value: store },
+  React.cloneElement(children),
+)
+
 export const useStore = () => useContext(Context)
 
 export const useDispatch = () => {

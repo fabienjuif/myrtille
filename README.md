@@ -125,6 +125,7 @@ store.dispatch('@@ui/CLEAR_TODOS')
 - `createStore(initialState: Object) -> Store`
   * Please look at [API](#api).
 - `provider(store: Store) -> Function(React.Component) -> React.Component`
+- `Provider({ store: Store, children }) -> React.Element`
 - `useDispatch() -> Function`
 - `useListeners(listeners: [][(String | Action), Function]) -> void`
 - `useStateAt(path: String | void) -> Any`
