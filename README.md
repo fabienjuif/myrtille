@@ -1,7 +1,7 @@
 # @fabienjuif/myrtille
 > An immutable (but feeling mutable) one-way state manager without reducers
 
-![npm](https://img.shields.io/npm/v/@fabienjuif/myrtille/core.svg) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@fabienjuif/myrtille.svg) ![CircleCI](https://img.shields.io/circleci/build/github/fabienjuif/myrtille.svg) ![Coveralls github](https://img.shields.io/coveralls/github/fabienjuif/myrtille.svg)
+![npm](https://img.shields.io/npm/v/@myrtille/core.svg) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@myrtille/core.svg) ![CircleCI](https://img.shields.io/circleci/build/github/fabienjuif/myrtille.svg) ![Coveralls github](https://img.shields.io/coveralls/github/fabienjuif/myrtille.svg)
 
 # Features
 - 🔄 One-way state manager: your store is the single source of truth
@@ -27,6 +27,14 @@ One of the last goals that Myrtille aims at is to let the developper doing whate
 - `npm install --save @myrtille/core`
 - `yarn add @myrtille/core`
 - `pnpm install --save @myrtille/core`
+
+# Packages
+
+| package name | description | size |
+|--|--|--|
+| `@myrtille/core` | base package, contains the createStore **without** the `mutate` function | ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@myrtille/core.svg) | 
+| `@myrtille/mutate` | contains the createStore **WITH** the `mutate` function, powered by immer | ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@myrtille/mutate.svg) | 
+| `@myrtille/react` | React.js bindings (works with core or mutate) | ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@myrtille/react.svg) | 
 
 # API
 - `createStore(initialState: Object) -> Store`
@@ -119,15 +127,4 @@ store.dispatch('@@ui/CLEAR_TODOS')
 
 # Bindings
 ## React <img width=30 src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/640px-React-icon.svg.png" />
-`import {} from "@fabienjuif/myrtille/react"`
-
-### API
-- `createStore(initialState: Object) -> Store`
-  * Please look at [API](#api).
-- `provider(store: Store) -> Function(React.Component) -> React.Component`
-- `Provider({ store: Store, children }) -> React.Element`
-- `useDispatch() -> Function`
-- `useListeners(listeners: [][(String | Action), Function]) -> void`
-- `useStateAt(path: String | void) -> Any`
-- `useStore -> Store`
-- `Context: React.Context`
+Please look at [this documentation](https://github.com/fabienjuif/myrtille/tree/master/packages/react)
