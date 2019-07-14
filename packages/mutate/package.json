@@ -1,0 +1,26 @@
+{
+  "name": "@myrtille/mutate",
+  "description": "An immutable (with immer mutations) one-way state manager without reducers.",
+  "version": "0.6.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@myrtille/core": "^0.6.0",
+    "immer": "^3.1.3"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "state",
+    "store",
+    "state-management",
+    "immutable",
+    "oneway",
+    "reaction",
+    "dispatch",
+    "event",
+    "not-redux"
+  ]
+}

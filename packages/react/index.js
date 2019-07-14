@@ -4,10 +4,7 @@ import React, {
   useEffect,
   useState,
 } from 'react' // eslint-disable-line import/no-unresolved
-import createStore from './index'
-import { getFromPath } from './util'
-
-export { createStore }
+import { getFromPath } from '@myrtille/util'
 
 export const Context = createContext()
 

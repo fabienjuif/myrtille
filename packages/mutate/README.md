@@ -1,7 +1,7 @@
-# @fabienjuif/myrtille
-> An immutable (but feeling mutable) one-way state manager without reducers
+# @myrtille/mutate
+> An immutable (with immer mutations) one-way state manager without reducers
 
-![npm](https://img.shields.io/npm/v/@fabienjuif/myrtille/core.svg) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@fabienjuif/myrtille.svg) ![CircleCI](https://img.shields.io/circleci/build/github/fabienjuif/myrtille.svg) ![Coveralls github](https://img.shields.io/coveralls/github/fabienjuif/myrtille.svg)
+![npm](https://img.shields.io/npm/v/@myrtille/mutate.svg) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@myrtille/mutate.svg) ![CircleCI](https://img.shields.io/circleci/build/github/fabienjuif/myrtille.svg) ![Coveralls github](https://img.shields.io/coveralls/github/myrtille/mutate.svg)
 
 # Features
 - 🔄 One-way state manager: your store is the single source of truth
@@ -24,9 +24,9 @@ We also want to make sure your UI component tree is optimized and only refreshes
 One of the last goals that Myrtille aims at is to let the developper doing whatever he wants with this library, that's why the store is always given and usable inside your callbacks, hack-it!
 
 # Installation
-- `npm install --save @myrtille/core`
-- `yarn add @myrtille/core`
-- `pnpm install --save @myrtille/core`
+- `npm install --save @fabienjuif/myrtille`
+- `yarn add @fabienjuif/myrtille`
+- `pnpm install --save @fabienjuif/myrtille`
 
 # API
 - `createStore(initialState: Object) -> Store`
@@ -36,7 +36,7 @@ One of the last goals that Myrtille aims at is to let the developper doing whate
   * set state to the given one and triggers listeners
 - `Store.getState() -> State`
   * get the current state
-- `Store.mutate((state: State) -> void): void` (only available with `@myrtille/mutate` version)
+- `Store.mutate((state: State) -> void): void`
   * register a mutation, the `currentState` given in callback HAVE TO be mutated, it is [myrtille](https://github.com/fabienjuif/myrtille) (via [immer](https://github.com/immerjs/immer)) that makes sure this is done in an immutable way!
   * eg: `store.mutate(state => { state.todos.push({ id: 2, label: 'new' }) })`
 - `Store.dispatch(action: String | Object) -> void`

@@ -1,5 +1,4 @@
-const produce = require('immer').default
-const { getFromPath } = require('./util')
+const { getFromPath } = require('@myrtille/util')
 const connectToDevtools = require('./devtools')
 
 const matchListener = (matcher, callback) => (store, action, ...args) => {
@@ -72,11 +71,7 @@ const createStore = (init) => {
     subscribers = subscribers.filter(subscriber => subscriber !== callback)
   }
 
-  const mutate = (callback) => {
-    runAndNotify(() => {
-      state = produce(state, (draft) => { callback(draft) })
-    })
-  }
+  const getState = () => state
 
   const setState = (newState) => {
     runAndNotify(() => {
@@ -87,8 +82,7 @@ const createStore = (init) => {
   store = {
     contexts: {},
     setState,
-    getState: () => state,
-    mutate,
+    getState,
     dispatch,
     addListener: (event, callback) => {
       let newReaction

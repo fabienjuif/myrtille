@@ -1,0 +1,25 @@
+{
+  "name": "@myrtille/core",
+  "description": "A one-way state manager without reducers.",
+  "version": "0.6.0",
+  "main": "index.js",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "dependencies": {
+    "@myrtille/util": "^0.6.0"
+  },
+  "keywords": [
+    "state",
+    "store",
+    "state-management",
+    "immutable",
+    "oneway",
+    "reaction",
+    "dispatch",
+    "event",
+    "not-redux"
+  ]
+}
