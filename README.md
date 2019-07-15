@@ -1,4 +1,4 @@
-# @fabienjuif/myrtille
+# myrtille
 > An immutable (but feeling mutable) one-way state manager without reducers
 
 ![npm](https://img.shields.io/npm/v/@myrtille/core.svg) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@myrtille/core.svg) ![CircleCI](https://img.shields.io/circleci/build/github/fabienjuif/myrtille.svg) ![Coveralls github](https://img.shields.io/coveralls/github/fabienjuif/myrtille.svg)
