@@ -11,9 +11,6 @@
 - 📖 Compatible with redux-devtools
 
 ### API
-- `createStore(initialState: Object) -> Store`
-  * Please look at [@myrtille/core API](https://github.com/fabienjuif/myrtille#api).
-  * Or at [@myrtille/mutate API](https://github.com/fabienjuif/myrtille#api)
 - `provider(store: Store) -> Function(React.Component) -> React.Component`
 - `Provider({ store: Store, children }) -> React.Element`
 - `useDispatch() -> Function`
