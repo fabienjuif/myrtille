@@ -73,11 +73,11 @@ const createStore = (init) => {
   }
 
   const removeListener = (callback) => {
-    reactions = reactions.filter(reaction => reaction !== callback)
+    reactions = reactions.filter((reaction) => reaction !== callback)
   }
 
   const removeSubscriber = (callback) => {
-    subscribers = subscribers.filter(subscriber => subscriber !== callback)
+    subscribers = subscribers.filter((subscriber) => subscriber !== callback)
   }
 
   const getState = () => state
