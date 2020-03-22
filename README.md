@@ -51,11 +51,11 @@ One of the last goals that Myrtille aims at is to let the developper doing whate
   * dispatch an action that listeners can register on. If the action is a string, the `action` is created by [myrtille](https://github.com/fabienjuif/myrtille) to follow the standard rule: `{ type: $yourString }`
   * eg: `store.dispatch('FETCH_TODOS')`
   * eg: `store.dispatch({ type: 'ADD_TODO', payload: { id: 2, label: 'new' }})`
-- `Store.addListener(action: String | Action | Function, callback: Function((store: Store, action: Action) -> void) | void) -> Function`
-  * add a listener to the store, a listener **listen** to an action, when this `action` is dispatched, the registered `callback` is called.
-  * you can set your `callback` at first argument, in which it will be called for every actions dispatched.
-  * you can play with the store in the given callback (dispatch new action, register mutations, etc.)
-  * calling the returned function will remove your callback
+- `Store.addListener(action: String | Action | Function, reaction: Function((store: Store, action: Action) -> void) | void) -> Function`
+  * add a listener to the store, a listener **listen** to an action, when this `action` is dispatched, the registered `reaction` (which is a callback) is called.
+  * you can set your `reaction` at first argument, in which it will be called for every actions dispatched.
+  * you can play with the store in the given reaction (dispatch new action, register mutations, etc.)
+  * calling the returned function will remove your reaction
   * eg: [take a look at listeners examples](#listeners-examples)
 - `Store.subscribe(path: String | Function, callback: Function(store: Store, oldState: State, action: Action) | void) -> Function`
   * subcribe to state mutations at given `path`. The registered `callback` is called whenever the store was mutated at given `path`.
