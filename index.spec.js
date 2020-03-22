@@ -56,7 +56,7 @@ it('should subscribe to given state path only', () => {
   // mutate
   store.mutate((state) => { state.name = 'Delphine' })
   expect(callback).toHaveBeenCalledTimes(1)
-  store.mutate(state => state.todos.push({ id: 2, label: 'new' }))
+  store.mutate((state) => state.todos.push({ id: 2, label: 'new' }))
   expect(callback).toHaveBeenCalledTimes(1)
 
   // setState

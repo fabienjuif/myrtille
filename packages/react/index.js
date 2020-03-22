@@ -8,7 +8,7 @@ import { getFromPath } from '@myrtille/util'
 
 export const Context = createContext()
 
-export const provider = store => Component => (props) => {
+export const provider = (store) => (Component) => (props) => {
   useEffect(() => {
     store.dispatch('@@react/MOUNT')
     return () => {
@@ -44,7 +44,7 @@ export const useListeners = (listeners = []) => {
     const unregisters = listeners.map(([matcher, mutator]) => store.addListener(matcher, mutator))
 
     return () => {
-      unregisters.forEach(unregister => unregister())
+      unregisters.forEach((unregister) => unregister())
     }
   }, [store])
 }
