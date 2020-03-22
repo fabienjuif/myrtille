@@ -80,6 +80,43 @@ it('should listen to specified actions only', () => {
   expect(callback).toHaveBeenCalledTimes(2)
 })
 
+it('should listen to function', () => {
+  const callback = jest.fn()
+  const store = createStore({ todos: [] })
+  store.addListener(() => true, callback)
+
+  store.dispatch('WHATEVER')
+  expect(callback).toHaveBeenCalledTimes(1)
+
+  const callback2 = jest.fn()
+  store.addListener(({ payload }) => payload === 2, callback2)
+
+  store.dispatch(({ payload: 1 }))
+  store.dispatch(({ payload: 2 }))
+  expect(callback).toHaveBeenCalledTimes(3)
+  expect(callback2).toHaveBeenCalledTimes(1)
+})
+
+it('should listen to a regexp', () => {
+  const callback = jest.fn()
+  const callback2 = jest.fn()
+  const store = createStore({ todos: [] })
+  store.addListener(/^@todos>.*/, callback)
+  store.addListener(/^@ui>.*/, callback2)
+
+  store.dispatch('@todos>SET')
+  expect(callback).toHaveBeenCalledTimes(1)
+  expect(callback2).toHaveBeenCalledTimes(0)
+
+  store.dispatch('@ui>@todos>SET')
+  expect(callback).toHaveBeenCalledTimes(1)
+  expect(callback2).toHaveBeenCalledTimes(1)
+
+  store.dispatch('@we')
+  expect(callback).toHaveBeenCalledTimes(1)
+  expect(callback2).toHaveBeenCalledTimes(1)
+})
+
 it('should be possible to mutate store into a listener', () => {
   const store = createStore({ todos: [] })
   store.addListener('ADD_TODO', (store, action) => {
