@@ -1,7 +1,7 @@
 const { getFromPath } = require('@myrtille/util')
 const connectToDevtools = require('./devtools')
 
-const matchListener = (matcher, callback) => (store, action, ...args) => {
+const matchListener = (matcher, reaction) => (store, action, ...args) => {
   if (
     // string matcher
     (typeof matcher === 'string' && matcher === action.type)
@@ -14,7 +14,7 @@ const matchListener = (matcher, callback) => (store, action, ...args) => {
       // regexp
       || (typeof matcher.test === 'function' && matcher.test(action.type))
     ))
-  ) callback(store, action, ...args)
+  ) reaction(store, action, ...args)
 }
 
 const matchSubscriber = (path, callback) => (store, oldState, ...args) => {
