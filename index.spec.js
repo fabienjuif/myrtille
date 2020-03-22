@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow,no-param-reassign */
 /* eslint-env jest */
-const createStore = require('./index')
+const createStore = require('./packages/mutate/index')
 
 it('should initialize a store', () => {
   const store = createStore({ todos: [] })
@@ -20,17 +20,17 @@ it('should mutate state', () => {
 })
 
 it('should listen to dispatch', () => {
-  const callback = jest.fn()
+  const reaction = jest.fn()
 
   const store = createStore({})
-  store.addListener(callback)
+  store.addListener(reaction)
 
   store.dispatch('FETCH_TODOS')
   store.dispatch({ type: 'ADD_TODO', payload: { id: 2, label: 'new' } })
 
-  expect(callback).toHaveBeenCalledTimes(2)
-  expect(callback.mock.calls[0]).toEqual([store, { type: 'FETCH_TODOS' }])
-  expect(callback.mock.calls[1]).toEqual([store, { type: 'ADD_TODO', payload: { id: 2, label: 'new' } }])
+  expect(reaction).toHaveBeenCalledTimes(2)
+  expect(reaction.mock.calls[0]).toEqual([store, { type: 'FETCH_TODOS' }])
+  expect(reaction.mock.calls[1]).toEqual([store, { type: 'ADD_TODO', payload: { id: 2, label: 'new' } }])
 })
 
 it('should subscribe to all mutations', () => {
@@ -67,17 +67,54 @@ it('should subscribe to given state path only', () => {
 })
 
 it('should listen to specified actions only', () => {
-  const callback = jest.fn()
+  const reaction = jest.fn()
   const store = createStore({ todos: [] })
-  store.addListener('ADD_TODO', callback)
-  store.addListener({ type: 'REMOVE_TODO' }, callback)
+  store.addListener('ADD_TODO', reaction)
+  store.addListener({ type: 'REMOVE_TODO' }, reaction)
 
   store.dispatch('ADD_TODO')
-  expect(callback).toHaveBeenCalledTimes(1)
+  expect(reaction).toHaveBeenCalledTimes(1)
   store.dispatch('SET_TODOS')
-  expect(callback).toHaveBeenCalledTimes(1)
+  expect(reaction).toHaveBeenCalledTimes(1)
   store.dispatch('REMOVE_TODO')
-  expect(callback).toHaveBeenCalledTimes(2)
+  expect(reaction).toHaveBeenCalledTimes(2)
+})
+
+it('should listen to function', () => {
+  const reaction = jest.fn()
+  const store = createStore({ todos: [] })
+  store.addListener(() => true, reaction)
+
+  store.dispatch('WHATEVER')
+  expect(reaction).toHaveBeenCalledTimes(1)
+
+  const reaction2 = jest.fn()
+  store.addListener(({ payload }) => payload === 2, reaction2)
+
+  store.dispatch(({ payload: 1 }))
+  store.dispatch(({ payload: 2 }))
+  expect(reaction).toHaveBeenCalledTimes(3)
+  expect(reaction2).toHaveBeenCalledTimes(1)
+})
+
+it('should listen to a regexp', () => {
+  const reaction = jest.fn()
+  const reaction2 = jest.fn()
+  const store = createStore({ todos: [] })
+  store.addListener(/^@todos>.*/, reaction)
+  store.addListener(/^@ui>.*/, reaction2)
+
+  store.dispatch('@todos>SET')
+  expect(reaction).toHaveBeenCalledTimes(1)
+  expect(reaction2).toHaveBeenCalledTimes(0)
+
+  store.dispatch('@ui>@todos>SET')
+  expect(reaction).toHaveBeenCalledTimes(1)
+  expect(reaction2).toHaveBeenCalledTimes(1)
+
+  store.dispatch('@we')
+  expect(reaction).toHaveBeenCalledTimes(1)
+  expect(reaction2).toHaveBeenCalledTimes(1)
 })
 
 it('should be possible to mutate store into a listener', () => {
@@ -93,17 +130,17 @@ it('should be possible to mutate store into a listener', () => {
 })
 
 it('should be possible to dispatch an action into a listener', () => {
-  const callback = jest.fn()
+  const reaction = jest.fn()
   const store = createStore({})
   store.addListener('FETCH_TODOS', (store) => {
     store.dispatch({ type: 'SET_TODOS', payload: [{ id: 303, label: 'imagine it is fetched' }] })
   })
-  store.addListener('SET_TODOS', callback)
+  store.addListener('SET_TODOS', reaction)
 
   store.dispatch('FETCH_TODOS')
 
-  expect(callback).toHaveBeenCalledTimes(1)
-  expect(callback.mock.calls[0]).toEqual([store, { type: 'SET_TODOS', payload: [{ id: 303, label: 'imagine it is fetched' }] }])
+  expect(reaction).toHaveBeenCalledTimes(1)
+  expect(reaction.mock.calls[0]).toEqual([store, { type: 'SET_TODOS', payload: [{ id: 303, label: 'imagine it is fetched' }] }])
 })
 
 it('should be possible to mutate store into a subscriber', () => {
@@ -124,17 +161,17 @@ it('should be possible to mutate store into a subscriber', () => {
 })
 
 it('should be possible to dispatch an action into a subscriber', () => {
-  const callback = jest.fn()
+  const reaction = jest.fn()
   const store = createStore({ name: undefined, todos: [] })
   store.subscribe('name', (store) => {
     store.dispatch({ type: 'ADD_TODO', payload: { id: 1, label: 'Introduce yourself to #welcome' } })
   })
-  store.addListener('ADD_TODO', callback)
+  store.addListener('ADD_TODO', reaction)
 
   store.mutate((state) => { state.name = 'Delphine' })
 
-  expect(callback).toHaveBeenCalledTimes(1)
-  expect(callback.mock.calls[0]).toEqual([store, { type: 'ADD_TODO', payload: { id: 1, label: 'Introduce yourself to #welcome' } }])
+  expect(reaction).toHaveBeenCalledTimes(1)
+  expect(reaction.mock.calls[0]).toEqual([store, { type: 'ADD_TODO', payload: { id: 1, label: 'Introduce yourself to #welcome' } }])
 })
 
 it('should trigger subscribers when a dispatch does not mutate store', () => {
