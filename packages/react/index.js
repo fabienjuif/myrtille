@@ -1,7 +1,11 @@
 import React, {
   createContext,
   useContext,
-  useEffect,
+  // we use layout effect so we are sure that per default there is no clipping
+  // and action like "mount" are sent right away
+  // if you want to delay a state update, you can wrap our custom hook into yours 
+  // and use an useEffect
+  useLayoutEffect,
   useState,
 } from 'react' // eslint-disable-line import/no-unresolved
 import { getFromPath } from '@myrtille/util'
@@ -9,7 +13,7 @@ import { getFromPath } from '@myrtille/util'
 export const Context = createContext()
 
 export const provider = (store) => (Component) => (props) => {
-  useEffect(() => {
+  useLayoutEffect(() => {
     store.dispatch('@@react/MOUNT')
     return () => {
       store.dispatch('@@react/UNMOUNT')
@@ -40,7 +44,7 @@ export const useDispatch = () => {
 export const useListeners = (listeners = []) => {
   const store = useContext(Context)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const unregisters = listeners.map(([matcher, mutator]) => store.addListener(matcher, mutator))
 
     return () => {
@@ -53,7 +57,7 @@ export const useStateAt = (path) => {
   const store = useContext(Context)
   const [state, setState] = useState(getFromPath(store.getState(), path))
 
-  useEffect(
+  useLayoutEffect(
     () => store.subscribe(path, () => setState(getFromPath(store.getState(), path))),
     [],
   )
