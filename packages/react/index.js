@@ -3,7 +3,7 @@ import React, {
   useContext,
   // we use layout effect so we are sure that per default there is no clipping
   // and action like "mount" are sent right away
-  // if you want to delay a state update, you can wrap our custom hook into yours 
+  // if you want to delay a state update, you can wrap our custom hook into yours
   // and use an useEffect
   useLayoutEffect,
   useState,
