@@ -1,7 +1,7 @@
 # @myrtille/mutate
 > An immutable (with immer mutations) one-way state manager without reducers
 
-![npm](https://img.shields.io/npm/v/@myrtille/mutate.svg) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@myrtille/mutate.svg) ![CircleCI](https://img.shields.io/circleci/build/github/fabienjuif/myrtille.svg) ![Coveralls github](https://img.shields.io/coveralls/github/fabienjuif/myrtille.svg)
+[![npm](https://img.shields.io/npm/v/@myrtille/mutate.svg)](https://www.npmjs.com/package/@myrtille/mutate) [![npm bundle size](https://img.shields.io/bundlephobia/minzip/@myrtille/mutate.svg)](https://bundlephobia.com/result?p=@myrtille/mutate@latest) [![CircleCI](https://img.shields.io/circleci/build/github/fabienjuif/myrtille.svg)](https://app.circleci.com/pipelines/github/fabienjuif/myrtille?branch=master) [![Coveralls github](https://img.shields.io/coveralls/github/fabienjuif/myrtille.svg)](https://coveralls.io/github/fabienjuif/myrtille)
 
 # Features
 - 🔄 One-way state manager: your store is the single source of truth
@@ -24,9 +24,17 @@ We also want to make sure your UI component tree is optimized and only refreshes
 One of the last goals that Myrtille aims at is to let the developper doing whatever he wants with this library, that's why the store is always given and usable inside your callbacks, hack-it!
 
 # Installation
-- `npm install --save @fabienjuif/myrtille`
-- `yarn add @fabienjuif/myrtille`
-- `pnpm install --save @fabienjuif/myrtille`
+- `npm install --save @myrtille/mutate`
+- `yarn add @myrtille/mutate`
+- `pnpm install --save @myrtille/mutate`
+
+# Packages
+
+| package name | description | size |
+|--|--|--|
+| `@myrtille/core` | base package, contains the createStore **without** the `mutate` function | ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@myrtille/core.svg) | 
+| `@myrtille/mutate` | contains the createStore **WITH** the `mutate` function, powered by immer | ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@myrtille/mutate.svg) | 
+| `@myrtille/react` | React.js bindings (works with core or mutate) | ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@myrtille/react.svg) | 
 
 # API
 - `createStore(initialState: Object) -> Store`
@@ -36,18 +44,18 @@ One of the last goals that Myrtille aims at is to let the developper doing whate
   * set state to the given one and triggers listeners
 - `Store.getState() -> State`
   * get the current state
-- `Store.mutate((state: State) -> void): void`
+- `Store.mutate((state: State) -> void): void` (only available with `@myrtille/mutate` version)
   * register a mutation, the `currentState` given in callback HAVE TO be mutated, it is [myrtille](https://github.com/fabienjuif/myrtille) (via [immer](https://github.com/immerjs/immer)) that makes sure this is done in an immutable way!
   * eg: `store.mutate(state => { state.todos.push({ id: 2, label: 'new' }) })`
 - `Store.dispatch(action: String | Object) -> void`
   * dispatch an action that listeners can register on. If the action is a string, the `action` is created by [myrtille](https://github.com/fabienjuif/myrtille) to follow the standard rule: `{ type: $yourString }`
   * eg: `store.dispatch('FETCH_TODOS')`
   * eg: `store.dispatch({ type: 'ADD_TODO', payload: { id: 2, label: 'new' }})`
-- `Store.addListener(action: String | Action | Function, callback: Function((store: Store, action: Action) -> void) | void) -> Function`
-  * add a listener to the store, a listener **listen** to an action, when this `action` is dispatched, the registered `callback` is called.
-  * you can set your `callback` at first argument, in which it will be called for every actions dispatched.
-  * you can play with the store in the given callback (dispatch new action, register mutations, etc.)
-  * calling the returned function will remove your callback
+- `Store.addListener(action: String | Action | Function, reaction: Function((store: Store, action: Action) -> void) | void) -> Function`
+  * add a listener to the store, a listener **listen** to an action, when this `action` is dispatched, the registered `reaction` (which is a callback) is called.
+  * you can set your `reaction` at first argument, in which it will be called for every actions dispatched.
+  * you can play with the store in the given reaction (dispatch new action, register mutations, etc.)
+  * calling the returned function will remove your reaction
   * eg: [take a look at listeners examples](#listeners-examples)
 - `Store.subscribe(path: String | Function, callback: Function(store: Store, oldState: State, action: Action) | void) -> Function`
   * subcribe to state mutations at given `path`. The registered `callback` is called whenever the store was mutated at given `path`.
@@ -116,3 +124,7 @@ store.addListener({ type: '@@ui/CLEAR_TODOS' }, store => {
 // dispatch the listened action
 store.dispatch('@@ui/CLEAR_TODOS')
 ```
+
+# Bindings
+## React <img width=30 src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/640px-React-icon.svg.png" />
+Please look at [this documentation](https://github.com/fabienjuif/myrtille/tree/master/packages/react)
