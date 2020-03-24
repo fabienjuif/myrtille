@@ -1,11 +1,11 @@
 {
   "name": "@myrtille/react",
   "description": "An immutable (with immer mutations) one-way state manager without reducers.",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@myrtille/util": "^0.8.0"
+    "@myrtille/util": "^0.8.1"
   },
   "publishConfig": {
     "access": "public",
