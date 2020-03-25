@@ -193,3 +193,27 @@ it('should NOT trigger subscribers when a dispatch does not mutate store', () =>
 
   expect(callback).toHaveBeenCalledTimes(0)
 })
+
+it('should dispatch event in a reaction in right order', () => {
+  const store = createStore({})
+  store.dispatch = jest.fn(store.dispatch)
+
+  store.addListener('start', (st) => {
+    st.dispatch('first')
+    st.dispatch('second')
+  })
+
+  const actions = []
+  store.subscribe((_, __, action) => {
+    actions.push(action)
+  })
+
+  store.dispatch('start')
+
+  expect(store.dispatch).toHaveBeenCalledTimes(3)
+  expect(actions).toEqual([
+    { type: 'start' },
+    { type: 'first' },
+    { type: 'second' },
+  ])
+})

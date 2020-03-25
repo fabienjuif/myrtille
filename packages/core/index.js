@@ -67,7 +67,7 @@ const createStore = (init) => {
     }, innerAction)
 
     if (nextDispatchs.length) {
-      const nextAction = nextDispatchs.pop()
+      const nextAction = nextDispatchs.shift()
       dispatch(nextAction)
     }
   }
