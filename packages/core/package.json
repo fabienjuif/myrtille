@@ -2,7 +2,7 @@
   "name": "@myrtille/core",
   "description": "A one-way state manager without reducers.",
   "version": "0.8.2",
-  "main": "index.js",
+  "main": "index.ts",
   "license": "MIT",
   "publishConfig": {
     "access": "public",

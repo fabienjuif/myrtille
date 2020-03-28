@@ -8,19 +8,22 @@
   "license": "MIT",
   "repository": "git@github.com:fabienjuif/myrtille.git",
   "scripts": {
-    "lint": "eslint --ext js,jsx --ignore-pattern node_modules --ignore-pattern coverage .",
+    "lint": "eslint --ext js,jsx,ts,tsx --ignore-pattern node_modules --ignore-pattern coverage .",
     "test": "jest"
   },
   "workspaces": [
     "packages/*"
   ],
   "devDependencies": {
+    "@types/jest": "^25.1.4",
     "coveralls": "^3.0.11",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.1",
     "jest": "^25.1.0",
-    "lerna": "^3.20.2"
+    "lerna": "^3.20.2",
+    "ts-jest": "^25.2.1",
+    "typescript": "^3.8.3"
   },
   "publishConfig": {
     "access": "public",
@@ -45,5 +48,8 @@
         "never"
       ]
     }
+  },
+  "jest": {
+    "preset": "ts-jest"
   }
 }
