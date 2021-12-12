@@ -6,7 +6,7 @@
   "license": "MIT",
   "dependencies": {
     "@myrtille/core": "^0.8.2",
-    "immer": "^6.0.2"
+    "immer": "^9.0.7"
   },
   "publishConfig": {
     "access": "public",
