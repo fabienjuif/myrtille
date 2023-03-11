@@ -1,12 +1,12 @@
 {
   "name": "@myrtille/mutate",
   "description": "An immutable (with immer mutations) one-way state manager without reducers.",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "main": "index.js",
   "types": "index.d.ts",
   "license": "MIT",
   "dependencies": {
-    "@myrtille/core": "^0.8.2",
+    "@myrtille/core": "^0.8.4",
     "immer": "^9.0.7"
   },
   "publishConfig": {
