@@ -3,6 +3,7 @@
   "description": "An immutable (with immer mutations) one-way state manager without reducers.",
   "version": "0.8.1",
   "main": "index.js",
+  "types": "index.d.ts",
   "license": "MIT",
   "dependencies": {
     "@myrtille/util": "^0.8.1"
